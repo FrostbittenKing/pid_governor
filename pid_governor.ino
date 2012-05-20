@@ -34,9 +34,9 @@ long total_error = 0;
 double set_value = 0;
 double p_factor = 1.6;
 //double p_factor = 2.35;
-double i_factor = 2;
+double i_factor = 1.7;
 
-double d_factor = 0.4; 
+double d_factor = 0; 
 const double DUTY_CYCLE_DURATION = 10000; // 5 ms duty cycle duration
 const double SECOND_IN_MICROS = 1000000;
 double old_error = 0;
