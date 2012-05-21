@@ -1,6 +1,12 @@
 set title 'pid controller rpm plot'
+set terminal png size 1280,1024
 set xlabel 'time in sec'
 set ylabel 'rpm'
-set xrange [0:10]
+set xrange [0:30]
 set yrange [0:1.4]
+set xtics 0,1
+set ytics 0,0.1
+set output 'test2.png'
+plot "plotted_data2" using ($1/1000):($2) smooth csplines
+set output 'test_disturbances.png'
 plot "plotted_data" using ($1/1000):($2) smooth csplines
