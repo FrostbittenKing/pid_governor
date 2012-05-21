@@ -62,7 +62,8 @@ void setup() {
         digitalWrite(ENABLE,HIGH);                      //   enable pin to high   
         attachInterrupt(0,rotationCounterIncrease,FALLING);  // attach interrupt for rotation input signal
         currentMicros = lastMicros = micros();               // initialize current and last rpm impulse variable
-        Serial.println("#\tX\tY");
+        Serial.println("#\tX\tY");       
+
 }
 
 void loop() {
@@ -76,9 +77,11 @@ void loop() {
    }*/
      
   char output[50];
+  char float_buf[10];
   if (buffer_filled) {
      for (int i = 0; i < RING_BUF_SIZE; i++) {
-       sprintf(output,"\t%lu\t%d",++ms_interrupt_counter * 100, rpm_ring_buffer[i]);
+       dtostrf((float)rpm_ring_buffer[i] / (float)REFERENCE_RPM,3,2,float_buf);
+       sprintf(output,"\t%lu\t%s",++ms_interrupt_counter * 100, float_buf);
        Serial.println(output);
      }
    buffer_filled = false;

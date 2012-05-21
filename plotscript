@@ -1,0 +1,6 @@
+set title 'pid controller rpm plot'
+set xlabel 'time in sec'
+set ylabel 'rpm'
+set xrange [0:10]
+set yrange [0:1.4]
+plot "plotted_data" using ($1/1000):($2) smooth csplines
