@@ -12,7 +12,8 @@
 #define ROTATE_LEFT 9
 #define ROTATE_RIGHT 5
 #define ENABLE 10
-
+#define RING_BUF_SIZE 300                                 // record for 30 s
+#define SERIAL_SPEED 19200
 
 void my_isr();
 
@@ -23,41 +24,34 @@ volatile unsigned long rpm = 0;                             // last calculated r
 volatile unsigned long time_difference = 0;                 // difference between two rotation impulses
 static const unsigned long MINUTE_IN_MICROS = 60000000;     // needed to calculate rpms
 volatile unsigned long time_buffer = 0;                      // buffer time difference
-volatile unsigned long count = 0;
 
-volatile unsigned int * rpm_ring_buffer = (unsigned int *) malloc(255 * sizeof(int));
+
+//volatile unsigned int * rpm_ring_buffer = (unsigned int *) malloc(RING_BUF_SIZE * sizeof(int));
+int rpm_ring_buffer[RING_BUF_SIZE];
 int ringBufPos = 0;
 
 
 static const int REFERENCE_RPM = 1500;
 long total_error = 0;
 double set_value = 0;
-double p_factor = 1.6;
+double p_factor = 1.67;
 //double p_factor = 2.35;
-double i_factor = 1.7;
+double i_factor = 2.2;
 
-double d_factor = 0; 
+double d_factor = 0.01; 
 const double DUTY_CYCLE_DURATION = 10000; // 5 ms duty cycle duration
 const double SECOND_IN_MICROS = 1000000;
+unsigned long ms_interrupt_counter = 0;
 double old_error = 0;
-int every_thousand = 0;
 
-int p_boundary = 100;
-int p_boundary_counter = 0;
-int i_boundary = 100;
-int i_boundary_counter = 0;
-int d_boundary = 100;
-int d_boundary_counter = 0;
+int store_rpm_boundary = 10;
+int rpm_store_counter = 1;
 
-static const float P_INC_VALUE = 0.05;
-static const float I_INC_VALUE = 0.01;
-static const float D_INC_VALUE = 0.01;
+boolean buffer_filled = false;
 
-int pwm_speed = 0;
-int step = 5;
 void setup() {
         lastMicros = 0;
-	Serial.begin(9600);
+	Serial.begin(SERIAL_SPEED);
 	pinMode(RPM_IN, INPUT);                              // rotation impulse pin as input
         pinMode(ENABLE,OUTPUT);                             // pwm output signal - controls 293 d motordriver
         pinMode(ROTATE_LEFT,OUTPUT);                         // rotate left signal pin as output
@@ -68,6 +62,7 @@ void setup() {
         digitalWrite(ENABLE,HIGH);                      //   enable pin to high   
         attachInterrupt(0,rotationCounterIncrease,FALLING);  // attach interrupt for rotation input signal
         currentMicros = lastMicros = micros();               // initialize current and last rpm impulse variable
+        Serial.println("#\tX\tY");
 }
 
 void loop() {
@@ -79,14 +74,19 @@ void loop() {
        Serial.println(rpm_ring_buffer[i]);
     }    
    }*/
-   
-  if (d_boundary_counter == d_boundary) {
-  //  p_factor += P_INC_VALUE;
-    d_boundary_counter = 0;
-    Serial.println(set_value);
-    Serial.println(rpm);
-    
+     
+  char output[50];
+  if (buffer_filled) {
+     for (int i = 0; i < RING_BUF_SIZE; i++) {
+       sprintf(output,"\t%lu\t%d",++ms_interrupt_counter * 100, rpm_ring_buffer[i]);
+       Serial.println(output);
+     }
+   buffer_filled = false;
+    Timer1.attachInterrupt(my_isr);
+  //  attachInterrupt(0,rotationCounterIncrease,FALLING);  // attach interrupt for rotation input signal
+  
   }
+  
 }
 
 void my_isr() {
@@ -97,20 +97,23 @@ void my_isr() {
     total_error += difference_rpm;                                                                                                                           // total error for integration part
   double duty_cycle_seconds = (DUTY_CYCLE_DURATION / SECOND_IN_MICROS);                                                                                     // calculate duty cycle in secs
   set_value = min(1023,max(0,round(p_factor * difference_rpm + i_factor * duty_cycle_seconds * total_error + (d_factor * (difference_rpm - old_error) / duty_cycle_seconds))));      // calculate overall pid set value
- 
-   rpm_ring_buffer[ringBufPos] = rpm;
-  //store rpm in ringbuf
-  if (ringBufPos == 255) {
-   ringBufPos = -1;
+   
+  if(rpm_store_counter++ == store_rpm_boundary) {   
+    rpm_ring_buffer[ringBufPos] = rpm;
+    ringBufPos++;
+    rpm_store_counter = 1;
   }
-  ringBufPos++;  
-  
+  //store rpm in ringbuf
+  if (ringBufPos == RING_BUF_SIZE - 1) {
+   ringBufPos = -1;
+   Timer1.detachInterrupt();
+   //detachInterrupt(0);
+   buffer_filled = true;
+  }
+
    Timer1.pwm(ROTATE_LEFT,set_value);
    old_error = difference_rpm;        // save now old rpm difference  
-
-  d_boundary_counter++;
-
-  interrupts();
+interrupts();
 }
 
 void rotationCounterIncrease() {
@@ -124,6 +127,7 @@ void rotationCounterIncrease() {
   }
   interrupts();                                                                    // enable interrupts
 }
+
 
 
 
