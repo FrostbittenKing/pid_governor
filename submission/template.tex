@@ -1,0 +1,40 @@
+\documentclass[11pt,a4paper]{article}
+% packages
+\input{./configuration/config}
+% macros
+\input{./configuration/macros}
+% titlepage macros
+\input{./configuration/titlepageMacros}
+\begin{document}  
+% title Page
+\input{./titlePage/titlepageTemplate}
+
+\newpage
+% \setcounter{tocdepth}{1}
+\tableofcontents
+\thispagestyle{empty}
+\clearpage
+\pagenumbering{arabic}
+
+\begin{landscape}
+
+\section{Diagrams}
+\label{sec:diags}
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[height=0.7\textwidth]{../test}
+    \caption{pid governor relative rpms (1500 rpm)}
+  \end{figure}  
+\end{landscape}
+
+\begin{landscape}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[height=0.7\textwidth]{../test_disturbances}
+    \caption{pid governor relative rpms with disturbances (1500 rpm)}
+    \label{fig:dist}
+  \end{figure}
+\end{landscape}
+
+\end{document}

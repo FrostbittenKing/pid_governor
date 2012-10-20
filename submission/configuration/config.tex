@@ -1,0 +1,52 @@
+\special{papersize=210mm,297mm}
+% package includes
+\usepackage{graphicx}
+%\usepackage{pslatex}
+\usepackage{url}
+\usepackage[pdfborder={0 0 0}]{hyperref}
+%\usepackage[utf8x]{inputenc}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{moreverb}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{cancel}
+% polynomial division
+%\usepackage{polynom}
+%\usepackage{eucal}
+\usepackage{ifthen}
+% balkendiagramme
+\usepackage{tikz}
+\usepackage{tabularx}
+
+% more like the usual word processing dimensions
+%\usepackage[top=3cm, bottom=3cm, left=2.54cm, right=2.54cm]{geometry}
+\usepackage{bibgerm,cite}
+\usepackage{lastpage}
+\usepackage{layout}
+\usepackage{fancyhdr}
+\usepackage{ucs} 
+\usepackage[utf8x]{inputenc}
+%\usepackage[ngerman,english]{babel}
+%\usepackage{scrpage2}
+\usepackage{listings} \lstset{numbers=left, numberstyle=\tiny, numbersep=5pt, captionpos=b} 
+\usepackage{caption}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{pdflscape}
+\usepackage{paralist}
+%package includes end
+% Settings
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\definecolor{listinggray}{gray}{0.9}
+\pagestyle{fancy}
+
+\numberwithin{equation}{section} 
+%\figurewithin{figure}{section}
+
+% variable to check if specification should be included
+\newboolean{INCLUDE_SPEC}
+\setboolean{INCLUDE_SPEC}{false}

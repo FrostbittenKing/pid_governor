@@ -2,7 +2,7 @@
   Author: Eugen Dahm
    
    **
-  dependencies: TimerOne
+  dependencies: TimerOne: http://www.arduino.cc/playground/code/timer1
 **/
 
 #include <math.h>

@@ -1,0 +1,68 @@
+%\renewcommand \thesection {\arabic{section}.}
+\begin{titlepage}
+ 
+\begin{center}
+ 
+% Upper part of the page
+%  \includegraphics[width=0.15\textwidth]{logo1}
+%  \includegraphics[width=0.15\textwidth]{logo2}
+%  \includegraphics[width=0.15\textwidth]{logo3} \\[2cm]
+
+  \begin{minipage}{0.20\textwidth}
+    \begin{flushleft} 
+      \lvNr
+    \end{flushleft}
+  \end{minipage}
+  \begin{minipage}{0.50\textwidth}
+    \begin{center}
+      \textsc{\lvName}
+    \end{center}
+  \end{minipage}
+  \begin{minipage}{0.20\textwidth}
+    \begin{flushright}
+      \semester
+    \end{flushright}
+  \end{minipage}
+  \\[0.3cm]
+  \textsc{\exerciseNr} 
+  \\[0.7cm]
+% Title
+\HRule \\[0.4cm]
+{ \huge \bfseries \exerciseName}\\[0.4cm]
+ 
+\HRule \\[2cm]
+ 
+% Author and supervisor
+
+%\begin{minipage}{0.4\textwidth}
+%\begin{flushleft} \large
+%\emph{Author:}\\
+%John \textsc{Smith}
+%\end{flushleft}
+%\end{minipage}
+%\begin{minipage}{0.4\textwidth}
+%\begin{flushright} \large
+%\emph{Supervisor:} \\
+%Dr. Mark \textsc{Brown}
+%\end{flushright}
+%\end{minipage}
+
+%\vfill
+
+%\Large \textbf{\optional}
+\normalsize
+\vfill
+ 
+% Bottom of the page
+%\large \groupNr \\[12pt]
+\large \authorList \\[0.5cm]
+
+{\href{mailto:\mailAddr}{\mailAddr}\\} 
+\large \today
+\end{center}
+\end{titlepage}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../template"
+%%% End: 
